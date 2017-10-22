@@ -90,6 +90,9 @@ switch opt
         imshow('phantom_type1.png');
     case 3
         imshow('phantom_type2.png');
+    case 4
+        [file, path, ~] = uigetfile({'*.png;*.jpg;*.jpeg;*.JPG;*.JPEG'});
+        imshow(strcat(path, file))
 end
 
 % --- Executes during object creation, after setting all properties.
