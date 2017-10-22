@@ -22,7 +22,7 @@ function varargout = MRI_Reconstruction(varargin)
 
 % Edit the above text to modify the response to help MRI_Reconstruction
 
-% Last Modified by GUIDE v2.5 21-Oct-2017 20:58:16
+% Last Modified by GUIDE v2.5 22-Oct-2017 18:07:00
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -92,7 +92,13 @@ switch opt
         imshow('phantom_type2.png');
     case 4
         [file, path, ~] = uigetfile({'*.png;*.jpg;*.jpeg;*.JPG;*.JPEG'});
-        imshow(strcat(path, file))
+        if ischar(file) && ischar(path)
+            imdata = imread(strcat(path, file));
+            if size(imdata, 3) == 3
+                imdata = rgb2gray(imdata);
+            end
+            imshow(imdata);
+        end
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -106,3 +112,17 @@ function pickPhantom_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in run.
+function run_Callback(hObject, eventdata, handles)
+% hObject    handle to run (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+MRI = MRI_Cartesian(getimage(handles.phantomAxes), 128, 128);
+axes(handles.MRIAxes);
+imshow(MRI, [0, max(MRI(:))]);
+
+compareImg = abs(double(getimage(handles.phantomAxes)) - double(MRI)); 
+axes(handles.diffAxes); 
+imshow(compareImg, [0 max(compareImg(:))]);
