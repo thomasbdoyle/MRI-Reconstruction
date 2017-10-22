@@ -22,7 +22,7 @@ function varargout = MRI_Reconstruction(varargin)
 
 % Edit the above text to modify the response to help MRI_Reconstruction
 
-% Last Modified by GUIDE v2.5 21-Oct-2017 20:33:34
+% Last Modified by GUIDE v2.5 21-Oct-2017 20:58:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -73,19 +73,28 @@ function varargout = MRI_Reconstruction_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+% --- Executes on selection change in pickPhantom.
+function pickPhantom_Callback(hObject, eventdata, handles)
+% hObject    handle to pickPhantom (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu1 contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from popupmenu1
-
+% Hints: contents = cellstr(get(hObject,'String')) returns pickPhantom contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from pickPhantom
+opt = get(handles.pickPhantom, 'Value');
+axes(handles.phantomAxes);
+switch opt
+    case 1
+        cla;
+    case 2
+        imshow('phantom_type1.png');
+    case 3
+        imshow('phantom_type2.png');
+end
 
 % --- Executes during object creation, after setting all properties.
-function popupmenu1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to popupmenu1 (see GCBO)
+function pickPhantom_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pickPhantom (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
