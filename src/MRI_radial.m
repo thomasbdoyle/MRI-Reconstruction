@@ -53,7 +53,7 @@ function acq_img = MRI_radial(img, lines, pointsperline)
 
     % reconstruct from projections
     recons = iradon(IR', 180/delT);
-    recons = fliplr(flipud(recons(16:N1+15, 16:N1+15)));
+    recons = rot90(recons(16:N1+15, 16:N1+15),2);
 
     acq_img = recons;
     waitbar(4/4)
