@@ -119,6 +119,7 @@ function run_Callback(hObject, eventdata, handles)
 % hObject    handle to run (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+if(get(handles.pickPhantom, 'Value') ~= 1 && (get(handles.pickPhantom, 'Value') == 4 && ~isempty(get(handles.phantomAxes, 'Children'))) )
 MRI = MRI_Cartesian(getimage(handles.phantomAxes), 128, 128);
 axes(handles.MRIAxes);
 imshow(MRI, [0, max(MRI(:))]);
@@ -126,3 +127,4 @@ imshow(MRI, [0, max(MRI(:))]);
 compareImg = abs(double(getimage(handles.phantomAxes)) - double(MRI)); 
 axes(handles.diffAxes); 
 imshow(compareImg, [0 max(compareImg(:))]);
+end
