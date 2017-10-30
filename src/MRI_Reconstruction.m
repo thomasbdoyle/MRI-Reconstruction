@@ -139,7 +139,6 @@ function pickTrajectory_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns pickTrajectory contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from pickTrajectory
 opt = get(handles.pickTrajectory, 'Value');
-opt
 
 % --- Executes during object creation, after setting all properties.
 function pickTrajectory_CreateFcn(hObject, eventdata, handles)
