@@ -22,7 +22,7 @@ function varargout = MRI_Reconstruction(varargin)
 
 % Edit the above text to modify the response to help MRI_Reconstruction
 
-% Last Modified by GUIDE v2.5 30-Oct-2017 14:01:40
+% Last Modified by GUIDE v2.5 30-Oct-2017 21:10:31
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -61,6 +61,14 @@ guidata(hObject, handles);
 % UIWAIT makes MRI_Reconstruction wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
+% INITIAL VALUES
+NUM_LINES = 64;
+NUM_POINTS = 64;
+set(handles.linesText, 'String', num2str(NUM_LINES));
+set(handles.pointsText, 'String', num2str(NUM_POINTS));
+handles.trajInfo.num_lines = NUM_LINES;
+handles.trajInfo.num_points_per_line = NUM_POINTS;    
+guidata(hObject, handles);
 
 % --- Outputs from this function are returned to the command line.
 function varargout = MRI_Reconstruction_OutputFcn(hObject, eventdata, handles) 
@@ -85,7 +93,7 @@ opt = get(handles.pickPhantom, 'Value');
 axes(handles.phantomAxes);
 switch opt
     case 1
-        cla;
+        clearAxes(handles)
     case 2
         imshow('phantom_type1.png');
     case 3
@@ -98,6 +106,8 @@ switch opt
                 imdata = rgb2gray(imdata);
             end
             imshow(imdata);
+        else
+            clearAxes(handles)
         end
 end
 
@@ -122,19 +132,17 @@ function run_Callback(hObject, eventdata, handles)
 phantom = get(handles.pickPhantom, 'Value');
 trajectory = get(handles.pickTrajectory, 'Value');
 
-if(phantom == 1 || (phantom == 4 && isempty(get(handles.phantomAxes, 'Children'))))
+if(isempty(get(handles.phantomAxes, 'Children')))
     return;
 end
-
-MRI = [];
 
 switch trajectory
     case 1
         return;
     case 2
-        MRI = MRI_Cartesian(getimage(handles.phantomAxes), 128, 128);
+        MRI = MRI_Cartesian(getimage(handles.phantomAxes), handles.trajInfo.num_lines, handles.trajInfo.num_points_per_line);
     case 3
-        MRI = MRI_Radial(getimage(handles.phantomAxes), 128, 128);
+        MRI = MRI_Radial(getimage(handles.phantomAxes), handles.trajInfo.num_lines, handles.trajInfo.num_points_per_line);
 end
 
 axes(handles.MRIAxes);
@@ -161,6 +169,67 @@ function pickTrajectory_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function clearAxes(handles)
+    axes(handles.phantomAxes); cla;
+    axes(handles.MRIAxes); cla;
+    axes(handles.diffAxes); cla;
+
+function linesText_Callback(hObject, eventdata, handles)
+% hObject    handle to linesText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of linesText as text
+%        str2double(get(hObject,'String')) returns contents of linesText as a double
+val = get(hObject, 'String');
+if isempty(str2num(val))
+    set(hObject, 'String', handles.trajInfo.num_lines);
+    warndlg('Number of lines must be numerical');
+else
+    handles.trajInfo.num_lines = str2num(val);
+    guidata(hObject, handles);
+end
+
+% --- Executes during object creation, after setting all properties.
+function linesText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to linesText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function pointsText_Callback(hObject, eventdata, handles)
+% hObject    handle to pointsText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of pointsText as text
+%        str2double(get(hObject,'String')) returns contents of pointsText as a double
+val = get(hObject, 'String');
+if isempty(str2num(val))
+    set(hObject, 'String', handles.trajInfo.num_points_per_line);
+    warndlg('Number of points must be numerical');
+else
+    handles.trajInfo.num_points_per_line = str2num(val);
+    guidata(hObject, handles);
+end
+
+% --- Executes during object creation, after setting all properties.
+function pointsText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pointsText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
