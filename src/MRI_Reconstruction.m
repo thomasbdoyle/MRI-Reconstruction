@@ -119,15 +119,30 @@ function run_Callback(hObject, eventdata, handles)
 % hObject    handle to run (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-if(get(handles.pickPhantom, 'Value') ~= 1 && ~(get(handles.pickPhantom, 'Value') == 4 && isempty(get(handles.phantomAxes, 'Children'))) )
-MRI = MRI_Cartesian(getimage(handles.phantomAxes), 128, 128);
+phantom = get(handles.pickPhantom, 'Value');
+trajectory = get(handles.pickTrajectory, 'Value');
+
+if(phantom == 1 || (phantom == 4 && isempty(get(handles.phantomAxes, 'Children'))))
+    return;
+end
+
+MRI = [];
+
+switch trajectory
+    case 1
+        return;
+    case 2
+        MRI = MRI_Cartesian(getimage(handles.phantomAxes), 128, 128);
+    case 3
+        MRI = MRI_Radial(getimage(handles.phantomAxes), 128, 128);
+end
+
 axes(handles.MRIAxes);
 imshow(MRI, [0, max(MRI(:))]);
 
 compareImg = abs(double(getimage(handles.phantomAxes)) - double(MRI)); 
 axes(handles.diffAxes); 
 imshow(compareImg, [0 max(compareImg(:))]);
-end
 
 
 % --- Executes on selection change in pickTrajectory.
@@ -138,7 +153,6 @@ function pickTrajectory_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns pickTrajectory contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from pickTrajectory
-opt = get(handles.pickTrajectory, 'Value');
 
 % --- Executes during object creation, after setting all properties.
 function pickTrajectory_CreateFcn(hObject, eventdata, handles)
