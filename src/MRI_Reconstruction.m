@@ -95,9 +95,9 @@ switch opt
     case 1
         clearAxes(handles)
     case 2
-        imshow('phantom_type1.png');
+        imshow('../data/phantom_type1.png');
     case 3
-        imshow('phantom_type2.png');
+        imshow('../data/phantom_type2.png');
     case 4
         [file, path, ~] = uigetfile({'*.png;*.jpg;*.jpeg;*.JPG;*.JPEG'});
         if ischar(file) && ischar(path)
@@ -161,6 +161,16 @@ function pickTrajectory_Callback(hObject, eventdata, handles)
 
 % Hints: contents = cellstr(get(hObject,'String')) returns pickTrajectory contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from pickTrajectory
+opt = get(handles.pickTrajectory, 'Value');
+axes(handles.trajectoryAxes);
+switch opt
+    case 1
+        cla;
+    case 2
+        imshow('../data/cartesian.png');
+    case 3
+        imshow('../data/radial.png');
+end
 
 % --- Executes during object creation, after setting all properties.
 function pickTrajectory_CreateFcn(hObject, eventdata, handles)
