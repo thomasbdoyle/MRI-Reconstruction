@@ -105,6 +105,7 @@ switch opt
             if size(imdata, 3) == 3
                 imdata = rgb2gray(imdata);
             end
+            imdata = imresize(imdata, [256,256]);
             imshow(imdata);
         else
             clearAxes(handles)
