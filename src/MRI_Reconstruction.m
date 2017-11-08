@@ -22,7 +22,7 @@ function varargout = MRI_Reconstruction(varargin)
 
 % Edit the above text to modify the response to help MRI_Reconstruction
 
-% Last Modified by GUIDE v2.5 30-Oct-2017 21:10:31
+% Last Modified by GUIDE v2.5 08-Nov-2017 13:33:18
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -62,12 +62,8 @@ guidata(hObject, handles);
 % uiwait(handles.figure1);
 
 % INITIAL VALUES
-NUM_LINES = 64;
-NUM_POINTS = 64;
-set(handles.linesText, 'String', num2str(NUM_LINES));
-set(handles.pointsText, 'String', num2str(NUM_POINTS));
-handles.trajInfo.num_lines = NUM_LINES;
-handles.trajInfo.num_points_per_line = NUM_POINTS;    
+set(handles.lines, 'Value', 3);
+set(handles.points, 'Value', 3); 
 guidata(hObject, handles);
 
 % --- Outputs from this function are returned to the command line.
@@ -137,13 +133,16 @@ if(isempty(get(handles.phantomAxes, 'Children')))
     return;
 end
 
+lines = 2^(get(handles.lines, 'Value') + 3);
+points = 2^(get(handles.points, 'Value') + 3);
+
 switch trajectory
     case 1
         return;
     case 2
-        MRI = MRI_Cartesian(getimage(handles.phantomAxes), handles.trajInfo.num_lines, handles.trajInfo.num_points_per_line);
+        MRI = MRI_Cartesian(getimage(handles.phantomAxes), lines, points);
     case 3
-        MRI = MRI_Radial(getimage(handles.phantomAxes), handles.trajInfo.num_lines, handles.trajInfo.num_points_per_line);
+        MRI = MRI_Radial(getimage(handles.phantomAxes), lines, points);
 end
 
 axes(handles.MRIAxes);
@@ -241,6 +240,52 @@ function pointsText_CreateFcn(hObject, eventdata, handles)
 % handles    empty - handles not created until after all CreateFcns called
 
 % Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in lines.
+function lines_Callback(hObject, eventdata, handles)
+% hObject    handle to lines (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns lines contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from lines
+
+
+% --- Executes during object creation, after setting all properties.
+function lines_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to lines (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on selection change in points.
+function points_Callback(hObject, eventdata, handles)
+% hObject    handle to points (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns points contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from points
+
+
+% --- Executes during object creation, after setting all properties.
+function points_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to points (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
