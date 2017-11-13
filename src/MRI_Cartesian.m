@@ -27,6 +27,7 @@ function acq_img = MRI_Cartesian(img, klines, kpoints)
 
     IF2 = (ifft2(fftshift(F2)));
     IF2 = abs((IF2));
+        
     
     %res_IF2 = imresize(IF2((N/2+1):N*2.5, (N/2+1):N*2.5), 0.5);
     
@@ -34,6 +35,7 @@ function acq_img = MRI_Cartesian(img, klines, kpoints)
     
     res_IF2 = imresize(IF2, size(IF2)./k);
     acq_img = res_IF2;
+    
     
     acq_img = acq_img/(max(acq_img(:))) * 255;
 
