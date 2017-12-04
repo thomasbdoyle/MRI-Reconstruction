@@ -22,7 +22,7 @@ function varargout = MRI_Reconstruction(varargin)
 
 % Edit the above text to modify the response to help MRI_Reconstruction
 
-% Last Modified by GUIDE v2.5 08-Nov-2017 13:33:18
+% Last Modified by GUIDE v2.5 03-Dec-2017 22:36:08
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -135,15 +135,21 @@ end
 
 lines = 2^(get(handles.lines, 'Value') + 3);
 points = 2^(get(handles.points, 'Value') + 3);
+maskPercent = get(handles.slider1, 'Value');
+maskType = get(handles.popupmenu6, 'Value');
+invert = get(handles.radiobutton3, 'Value');
 
 switch trajectory
     case 1
         return;
     case 2
-        MRI = MRI_Cartesian(getimage(handles.phantomAxes), lines, points);
+        [MRI, mask] = MRI_Cartesian(getimage(handles.phantomAxes), lines, points, maskType - 2, maskPercent, invert);
     case 3
         MRI = MRI_Radial(getimage(handles.phantomAxes), lines, points);
 end
+
+axes(handles.axes16);
+imshow(mask);
 
 axes(handles.MRIAxes);
 imshow(MRI, [0, max(MRI(:))]);
@@ -290,3 +296,57 @@ function points_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on selection change in popupmenu6.
+function popupmenu6_Callback(hObject, eventdata, handles)
+% hObject    handle to popupmenu6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns popupmenu6 contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from popupmenu6
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to popupmenu6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on slider movement.
+function slider1_Callback(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in radiobutton3.
+function radiobutton3_Callback(hObject, eventdata, handles)
+% hObject    handle to radiobutton3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of radiobutton3
