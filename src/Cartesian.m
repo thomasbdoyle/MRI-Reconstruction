@@ -1,4 +1,4 @@
-function acq_img = Cartesian(img, klines, kpoints)
+function acq_img = Cartesian(img)
     N = length(img);
 
     F = fftshift(fft2(img));
@@ -6,8 +6,8 @@ function acq_img = Cartesian(img, klines, kpoints)
     
     % sampling intervals 
     
-    for i = klines:1:N-klines
-        for j = kpoints:1:N-kpoints
+    for i = 1:1:N
+        for j = 1:2:N
             F2(i,j) = F(i,j);
         end
     end
@@ -15,5 +15,7 @@ function acq_img = Cartesian(img, klines, kpoints)
 %     sampleSize = size(sample);
 %     F2(N/2 - sampleSize(1)/2 + 1 : N/2 + sampleSize(1)/2, N/2 - sampleSize(2)/2 + 1 : N/2 + sampleSize(2)/2) = sample;
 
-    acq_img = abs(ifft2(F2));
+    MRI = abs(ifft2(F2));
+
+    acq_img = abs(MRI);
 end
