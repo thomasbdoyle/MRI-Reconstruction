@@ -144,12 +144,18 @@ switch trajectory
         return;
     case 2
         [MRI, mask] = MRI_Cartesian(getimage(handles.phantomAxes), lines, points, maskType - 2, maskPercent, invert);
+        axes(handles.axes16);
+        imshow(mask);
     case 3
         [MRI, mask] = MRI_Radial(getimage(handles.phantomAxes), lines, points, maskType - 2, maskPercent, invert);
+        axes(handles.axes16);
+        imshow(mask);
+    case 4 
+        MRI = Cartesian(getimage(handles.phantomAxes));
+        axes(handles.axes16);
+        cla;
 end
 
-axes(handles.axes16);
-imshow(mask);
 axes(handles.MRIAxes);
 imshow(MRI, [0, max(MRI(:))]);
 
