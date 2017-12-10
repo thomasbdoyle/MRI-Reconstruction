@@ -145,12 +145,11 @@ switch trajectory
     case 2
         [MRI, mask] = MRI_Cartesian(getimage(handles.phantomAxes), lines, points, maskType - 2, maskPercent, invert);
     case 3
-        MRI = MRI_Radial(getimage(handles.phantomAxes), lines, points);
+        [MRI, mask] = MRI_Radial(getimage(handles.phantomAxes), lines, points, maskType - 2, maskPercent, invert);
 end
 
 axes(handles.axes16);
 imshow(mask);
-
 axes(handles.MRIAxes);
 imshow(MRI, [0, max(MRI(:))]);
 

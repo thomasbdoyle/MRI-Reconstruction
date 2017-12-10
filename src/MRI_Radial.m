@@ -1,5 +1,5 @@
 
-function acq_img = MRI_radial(img, lines, pointsperline)
+function [acq_img, mask] = MRI_radial(img, lines, pointsperline, maskType, maskPercent, invert)
     wb = waitbar(0,'Please wait...');
     
     N1 = size(img);
@@ -41,14 +41,25 @@ function acq_img = MRI_radial(img, lines, pointsperline)
 %     hold off
 %     subplot(1,2,2);
 %     imshow(log(abs(Rv)+1)',[0,10])
+    S = size(Rv);
+    maskedRv = zeros(S);
+    mask = getMask(S, maskType, maskPercent, invert);
+    for i=1:1:S(1)
+        for j=1:1:S(2)
+            if mask(i,j) == 1
+                maskedRv(i, j) = Rv(i,j);
+            end
+        end
+    end
+
     waitbar(3/4)
 %% Reconstruction
 
-    IR = zeros(size(Rv));
+    IR = zeros(size(maskedRv));
 
     % 1D ifft
     for i = 1:delT
-       IR(i, :) =fliplr(fftshift((abs(ifft((Rv(i, :))))))); 
+       IR(i, :) =fliplr(fftshift((abs(ifft((maskedRv(i, :))))))); 
     end
 
     % reconstruct from projections
